@@ -38,11 +38,11 @@ cmdline () {
 	# cd /tmp/kernel12/work
 	# If Vol+ was pressed, check if cmdline already has the permissive tag
 	# If not, echo it in
-	if [ $mode = "permssive" ]; then
+	if [ $mode = "permissive" ]; then
 		if busybox cat /tmp/kernel12/work/original.img-cmdline | busybox grep androidboot.selinux=permissive; then
 			:
 		elif ! busybox cat /tmp/kernel12/work/original.img-cmdline | busybox grep androidboot.selinux=permissive; then
-			busybox echo "$(busybox cat work/original.img-cmdline) androidboot.selinux=permissive" >/tmp/kernel12/work/original.img-cmdline
+			busybox echo "$(busybox cat /tmp/work/original.img-cmdline) androidboot.selinux=permissive" >/tmp/kernel12/work/original.img-cmdline
 		fi
 	# Else, check the cmdline and remove the tag if it's already present
 	else
@@ -55,6 +55,7 @@ cmdline () {
 			busybox cat tmp >/tmp/kernel12/work/original.img-cmdline
 		fi
 	fi
+	busybox cat /tmp/kernel12/work/original.img-cmdline
 }
 
 mkimg () {
