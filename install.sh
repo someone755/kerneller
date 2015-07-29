@@ -1,4 +1,7 @@
 #!/sbin/busybox sh
+# Remove files from previous installation -- if the user flashes the zip
+# twice, there would otherwise be issues, creating a useless boot.img
+rm -rf /tmp/kernel12
 # Use keycheck to determine what kind of image the user wants. Give it 30 seconds.
 # Vol+ means permissive, Vol- or no keypress means enforcing.
 choose () {
