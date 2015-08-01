@@ -45,7 +45,7 @@ cmdline () {
 		if busybox cat /tmp/kernel12/work/original.img-cmdline | busybox grep androidboot.selinux=permissive; then
 			:
 		elif ! busybox cat /tmp/kernel12/work/original.img-cmdline | busybox grep androidboot.selinux=permissive; then
-			busybox echo "$(busybox cat /tmp/work/original.img-cmdline) androidboot.selinux=permissive" >/tmp/kernel12/work/original.img-cmdline
+			busybox echo "$(busybox cat /tmp/kernel12/work/original.img-cmdline) androidboot.selinux=permissive" >/tmp/kernel12/work/original.img-cmdline
 		fi
 	# Else, check the cmdline and remove the tag if it's already present
 	else
