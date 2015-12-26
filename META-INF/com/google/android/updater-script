@@ -1,0 +1,16 @@
+ui_print(" ");
+show_progress(0.1, 0);
+ui_print("# # # # # # # # # # # # #");
+ui_print("#    nameofyourkernel   #");
+ui_print("#      by yourname      #");
+ui_print("# # # # # # # # # # # # #");
+ui_print(" ");
+ui_print("Powered by kerneller by someone755 ");
+ui_print(" ");
+mount("ext4", "EMMC", "/dev/block/platform/msm_sdcc.1/by-name/system", "/system");
+package_extract_dir("extract", "/tmp/kerneller");
+set_perm(0, 0, 0777, "/tmp/kerneller/install.sh");
+run_program("/tmp/kerneller/install.sh");
+set_perm_recursive(0, 0, 0755, 0644, "/system/lib/modules");
+ui_print(" ");
+show_progress(0.8, 0);
