@@ -18,7 +18,8 @@ choose () {
 	ui_print "Your move.";
 	ui_print " ";
 	chmod 777 $tools/keycheck;
-	timeout -t 30 $tools/keycheck;
+	chmod 777 $tools/timeout;
+	./$tools/timeout -t 30 $tools/keycheck;
 	if [[ $? -eq 42 ]]; then
 		ui_print "Making permissive image";
 		mode="permissive";
