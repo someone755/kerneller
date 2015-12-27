@@ -1,0 +1,8 @@
+#!/bin/bash
+# A simple script to pack and sign your installer zip
+find . -name "*~" -type f -delete
+zip -r r_temp.zip extract/ META-INF/
+java -Xmx2048m -jar signing/signapk.jar -w signing/testkey.x509.pem signing/testkey.pk8 r_temp.zip r_signapk.zip
+./signing/zipadjust r_signapk.zip r_aligned.zip
+java -Xmx2048m -jar signing/minsignapk.jar signing/testkey.x509.pem signing/testkey.pk8 r_aligned.zip r.zip
+rm -rf r_signapk.zip r_aligned.zip r_temp.zip
