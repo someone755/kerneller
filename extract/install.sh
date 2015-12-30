@@ -96,7 +96,8 @@ modcpy () {
 
 # Functions are all set: Run them in order
 choose
-ramdisk
+ramdisk_extract
+ramdisk_cpy
 cmdline
 mkimg
 # Check for one of the files we copied: if it's there, the boot
