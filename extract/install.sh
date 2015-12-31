@@ -19,7 +19,7 @@ choose () {
 	ui_print " ";
 	chmod 777 $tools/keycheck;
 	chmod 777 $tools/timeout;
-	./$tools/timeout -t 30 $tools/keycheck;
+	.$tools/timeout -t 30 $tools/keycheck;
 	if [[ $? -eq 42 ]]; then
 		ui_print "Making permissive image";
 		mode="permissive";
@@ -59,6 +59,7 @@ ramdisk_cpy () {
 		find . | cpio -o -H newc > $work/combinedroot/sbin/ramdisk.cpio;
 		cd $work/combinedroot;
 	else find . | cpio -o -H newc | gzip -c > $work/original.img-ramdisk.gz;
+	fi
 }
 
 cmdline () {
