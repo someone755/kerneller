@@ -39,12 +39,17 @@ ramdisk_extract () {
 	mkdir $work/combinedroot;
 	cd $work/combinedroot;
 	cat $work/original.img-ramdisk.gz | gzip -d | cpio -i -d;
-  	if [ -f $work/combinedroot/sbin/ramdisk.cpio ]; then
+  	if [ ! -f $work/combinedroot/sbin/ramdisk.cpio ]; then
+		ui_print "Found single-stage ramdisk"
+		number=1
+		fstab=$work/combinedroot/fstab.qcom
+  	else 
+		ui_print "Found two-stage ramdisk"
+		number=2
+		fstab=$work/ramdisk/fstab.qcom
 		mkdir $work/ramdisk;
 		cd $work/ramdisk;
 		cat $work/combinedroot/sbin/ramdisk.cpio | cpio -i -d;
-		number=2
-  	else number=1
   	fi
 }
 # Replace the crucial files and repack the ramdisk
@@ -58,7 +63,10 @@ ramdisk_cpy () {
 	if [ $number = 2 ]; then
 		find . | cpio -o -H newc > $work/combinedroot/sbin/ramdisk.cpio;
 		cd $work/combinedroot;
-	else find . | cpio -o -H newc | gzip -c > $work/original.img-ramdisk.gz;
+		ui_print "Repacking two-stage ramdisk"
+	else 
+		find . | cpio -o -H newc | gzip -c > $work/original.img-ramdisk.gz;
+		ui_print "Repacking single-stage ramdisk"
 	fi
 }
 
@@ -104,7 +112,7 @@ mkimg
 # Check for one of the files we copied: if it's there, the boot
 # image was repacked succesfully. If not, flashing it would not
 # allow the device to boot. Include copying of modules in this check
-if [ -f $work/ramdisk/fstab.qcom ]; then
+if [ -f $work/ramdisk/fstab.qcom ] && [ -f /tmp/kerneller/boot.img ]; then
   ui_print "Done messing around!";
   ui_print "Writing the new boot.img...";
   dd if=/tmp/kerneller/boot.img of=/dev/block/platform/msm_sdcc.1/by-name/boot
