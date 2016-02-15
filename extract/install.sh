@@ -112,7 +112,7 @@ mkimg
 # Check for one of the files we copied: if it's there, the boot
 # image was repacked succesfully. If not, flashing it would not
 # allow the device to boot. Include copying of modules in this check
-if [ -f $work/ramdisk/fstab.qcom ] && [ -f /tmp/kerneller/boot.img ]; then
+if [ -f $work/ramdisk/fstab.qcom ] || [ -f $work/combinedroot/fstab.qcom ] && [ -f /tmp/kerneller/boot.img ]; then
   ui_print "Done messing around!";
   ui_print "Writing the new boot.img...";
   dd if=/tmp/kerneller/boot.img of=/dev/block/platform/msm_sdcc.1/by-name/boot
