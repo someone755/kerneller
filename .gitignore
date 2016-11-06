@@ -4,5 +4,6 @@
 *.zip
 dt.img
 zImage
+zImage-dtb
 
 !.gitignore
