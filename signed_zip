@@ -1,8 +1,6 @@
 #!/bin/bash
-# A simple script to pack and sign your installer zip
-# Delete temporary "~" files; reduce clutter, make zip files cleaner
-find . -name "*~" -type f -delete
-zip -r r_temp.zip extract/ META-INF/   >/dev/null 2>/dev/null
+# A simple script to sign an existing 'r.zip' file.
+mv r.zip r_temp.zip
 java -Xmx2048m -jar signing/signapk.jar -w signing/testkey.x509.pem signing/testkey.pk8 r_temp.zip r_signapk.zip   >/dev/null 2>/dev/null
 ./signing/zipadjust r_signapk.zip r_aligned.zip
 java -Xmx2048m -jar signing/minsignapk.jar signing/testkey.x509.pem signing/testkey.pk8 r_aligned.zip r.zip

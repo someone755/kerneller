@@ -1,0 +1,5 @@
+#!/bin/bash
+# A simple script to pack and sign your installer zip
+# Delete temporary "~" files; reduce clutter, make zip files cleaner
+find . -name "*~" -type f -delete
+zip -r r_temp.zip extract/ META-INF/   >/dev/null 2>/dev/null
