@@ -8,14 +8,17 @@ ui_print() { echo "ui_print $1" >&$OUTFD; echo "ui_print" >&$OUTFD; }
 # Remove files from previous installation -- if the user flashes the zip
 # twice, there would otherwise be issues, creating a useless boot.img
 rm -rf $work;
-# Extract the ramdisk, check if it's one- or two-staged
-# (New Xperia boot images as well as most other devices use a single stage.)
-ramdisk_extract () {
+# Extract the boot image.
+boot_extract () {
 	ui_print "Modifying ramdisk";
 	dd if=$boot of=/tmp/kerneller/original.img;
 	chmod 777 $tools/unpackbootimg;
 	mkdir $work;
 	$tools/unpackbootimg -i /tmp/kerneller/original.img -o $work;
+}
+
+# Extract the ramdisk.
+ramdisk_extract () {
 	mkdir $work/combinedroot;
 	cd $work/combinedroot;
 	cat $work/original.img-ramdisk.gz | gzip -d | cpio -i -d;
@@ -91,7 +94,8 @@ modcpy () {
 }
 
 # Functions are all set: Run them in order
-ramdisk_extract
+boot_extract
+#ramdisk_extract
 #ramdisk_cpy
 #cmdline
 mkimg
