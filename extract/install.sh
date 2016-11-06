@@ -8,26 +8,6 @@ ui_print() { echo "ui_print $1" >&$OUTFD; echo "ui_print" >&$OUTFD; }
 # Remove files from previous installation -- if the user flashes the zip
 # twice, there would otherwise be issues, creating a useless boot.img
 rm -rf $work;
-# Use keycheck to determine what kind of image the user wants. Give it 30 seconds.
-# Vol+ means permissive, Vol- or no keypress means enforcing.
-choose () {
-	ui_print "You now have 30 seconds to press vol+/-";
-	ui_print " ";
-	ui_print "Pressing volume up will set SELinux to permissive.";
-	ui_print "Pressing volume down or not pressing anything will set it to enforcing.";
-	ui_print "Your move.";
-	ui_print " ";
-	chmod 777 $tools/keycheck;
-	chmod 777 $tools/timeout;
-	.$tools/timeout -t 30 $tools/keycheck;
-	if [[ $? -eq 42 ]]; then
-		ui_print "Making permissive image";
-		mode="permissive";
-	else
-		ui_print "Making enforcing image";
-		mode="enforcing";
-	fi
-}
 # Extract the ramdisk, check if it's one- or two-staged
 # (New Xperia boot images as well as most other devices use a single stage.)
 ramdisk_extract () {
@@ -104,20 +84,20 @@ modcpy () {
 }
 
 # Functions are all set: Run them in order
-choose
 ramdisk_extract
-ramdisk_cpy
-cmdline
+#ramdisk_cpy
+#cmdline
 mkimg
 # Check for one of the files we copied: if it's there, the boot
 # image was repacked succesfully. If not, flashing it would not
 # allow the device to boot. Include copying of modules in this check
-if [ -f $work/ramdisk/fstab.qcom ] || [ -f $work/combinedroot/fstab.qcom ] && [ -f /tmp/kerneller/boot.img ]; then
+if [ -f /tmp/kerneller/boot.img ]; then
+# [ -f $work/ramdisk/fstab.qcom ] || [ -f $work/combinedroot/fstab.qcom ] && 
   ui_print "Done messing around!";
   ui_print "Writing the new boot.img...";
   dd if=/tmp/kerneller/boot.img of=/dev/block/platform/msm_sdcc.1/by-name/boot
-  ui_print "Copying modules...";
-  modcpy
+  # ui_print "Copying modules...";
+  #modcpy
 else
   ui_print "Error creating working boot image, aborting install!";
 fi
