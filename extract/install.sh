@@ -39,6 +39,10 @@ ramdisk_extract () {
 	mkdir $work/combinedroot;
 	cd $work/combinedroot;
 	cat $work/original.img-ramdisk.gz | gzip -d | cpio -i -d;
+}
+
+# Check whether the ramdisk has a recovery inside.
+ramdisk_check () {
   	if [ ! -f $work/combinedroot/sbin/ramdisk.cpio ]; then
 		ui_print "Found single-stage ramdisk"
 		number=1
@@ -54,12 +58,15 @@ ramdisk_extract () {
 }
 # Replace the crucial files and repack the ramdisk
 ramdisk_cpy () {
-# Modify the following as per the files you've placed inside res/ (other than zImage & dt)
+# Modify the following as per the files you've placed inside res/ (other than zImage-dtb)
 	cp /tmp/kerneller/res/fstab.qcom $work/ramdisk/fstab.qcom;
 	cp /tmp/kerneller/res/init.sh $work/combinedroot/sbin/init.sh;
 	chmod 777 $work/ramdisk/fstab.qcom;
 	chmod 777 $work/combinedroot/sbin/init.sh;
+}
+
 # Repack the ramdisk back completely
+ramdisk_repack () {
 	if [ $number = 2 ]; then
 		find . | cpio -o -H newc > $work/combinedroot/sbin/ramdisk.cpio;
 		cd $work/combinedroot;
